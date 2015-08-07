@@ -29,7 +29,22 @@ static function bool Create(out XWeaponAddLocationInfo OutInfo, optional string 
 {
 	local string ObjectName;
 
-	ObjectName = InMapName != "" ? InMapName : GetMapName();
+	// only check for existing map if a custom name is not present
+	// (when the user doesn't want a custom name)
+	if (InMapName == "")
+	{
+		ObjectName = GetMapName();
+		if (!class'WorldInfo'.static.MapExists(ObjectName))
+		{
+			return false;
+		}
+	}
+	else
+	{
+		ObjectName = InMapName;
+	}
+
+	LogInternal("Mapname:"@ObjectName);
 	OutInfo = NewClass(ObjectName);
 	if (OutInfo != none)
 	{
