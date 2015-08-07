@@ -25,14 +25,9 @@ function LoadWeapons()
 	{
 		for (i=0; i<LocInfo.FactoryLocations.Length; i++)
 		{
-			SpawnFactory(LocInfo.FactoryLocations[i]);
+			LocInfo.RestoreFactory_Temp(WorldInfo, WeaponFactoryClass, LocInfo.FactoryLocations[i]);
 		}
 	}
-}
-
-function SpawnFactory(vector InLocation)
-{
-	Spawn(WeaponFactoryClass, none,, InLocation);
 }
 
 Defaultproperties

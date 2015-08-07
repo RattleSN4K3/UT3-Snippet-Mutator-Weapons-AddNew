@@ -63,7 +63,6 @@ function SaveWeapons()
 {
 	local string MapName;
 	local XWeaponAddLocationInfo LocInfo;
-	local Actor Factory;
 
 	MapName = GetMapName();
 	`Log(name$"::PostBeginPlay - Map:"@MapName,,'XMutatorWeaponAdd');
@@ -76,13 +75,7 @@ function SaveWeapons()
 
 	// clear old data
 	LocInfo.ClearConfig();
-
-	`Log(name$"::SaveWeapons - Storing factories...",,'XMutatorWeaponAdd');
-	foreach WorldInfo.DynamicActors(WeaponFactoryClass, Factory)
-	{
-		`Log(name$"::SaveWeapons - Storing factory"@Factory,,'XMutatorWeaponAdd');
-		LocInfo.StoreFactory(PickupFactory(Factory));
-	}
+	LocInfo.StoreFactories(WeaponFactoryClass);
 
 	LocInfo.SaveConfig();
 	WorldInfo.Game.Broadcast(none, "WeaponFactory data saved ("$LocInfo.FactoryCount()$" factories).");
