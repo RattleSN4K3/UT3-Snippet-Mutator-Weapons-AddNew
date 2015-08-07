@@ -55,11 +55,11 @@ static function bool Create(out XWeaponAddLocationInfo OutInfo, optional string 
 	return false;
 }
 
-static function bool Exists(optional out XWeaponAddLocationInfo OutInfo)
+static function bool Exists(optional out XWeaponAddLocationInfo OutInfo, optional string InMapName = "")
 {
 	local string TempMapName;
 
-	TempMapName = GetMapName();
+	TempMapName = InMapName != "" ? InMapName : GetMapName();
 	OutInfo = NewClass(TempMapName);
 	return OutInfo != none && OutInfo.MapName ~= TempMapName && OutInfo.Validate();
 }

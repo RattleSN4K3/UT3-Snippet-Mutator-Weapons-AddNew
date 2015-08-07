@@ -1,5 +1,7 @@
 class XWeaponAddEditorSaver extends BrushBuilder;
 
+var() string CustomMapName;
+
 event bool Build()
 {
     SaveWeapons();
@@ -11,7 +13,7 @@ function SaveWeapons()
 	local XWeaponAddLocationInfo LocInfo;
 	local class<PickupFactory> WeaponFactoryClass;
 
-	if (!class'XWeaponAddLocationInfo'.static.Create(LocInfo))
+	if (!class'XWeaponAddLocationInfo'.static.Create(LocInfo, CustomMapName))
 	{
 		BadParameters("Unable to create WeaponFactory profile.");
 		return;
