@@ -1,4 +1,4 @@
-class XWeaponAddMutatorEditor extends XWeaponAddMutator
+class XWeaponAddEditorMutator extends XWeaponAddMutator
 	HideCategories(Mutator, Advanced, Attachment, Debug, Physics)
 	placeable;
 
