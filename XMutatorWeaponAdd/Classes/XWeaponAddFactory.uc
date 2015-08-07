@@ -11,4 +11,11 @@ DefaultProperties
     bNoDelete=false
 
     WeaponPickupClass=class'UTWeap_ShockRifle'
+
+	// replicate initial rotation
+	bNetInitialRotation=true
+	bNeverReplicateRotation=false // just set is for safety
+
+	// replicate all other props (not only the 'hidden' flag)
+	bOnlyReplicateHidden=false
 }
