@@ -9,8 +9,6 @@ event bool Build()
 function LoadWeapons()
 {
 	local XWeaponAddLocationInfo LocInfo;
-	local int i;
-	local WorldInfo WI;
 	local class<PickupFactory> WeaponFactoryClass;
 
 	if (!class'XWeaponAddLocationInfo'.static.Exists(LocInfo))
@@ -19,12 +17,8 @@ function LoadWeapons()
 		return;
 	}
 
-	WI = class'Engine'.static.GetCurrentWorldInfo();
 	WeaponFactoryClass = class'XWeaponAddMutator'.default.WeaponFactoryClass;
-	for (i=0; i<LocInfo.FactoryLocations.Length; i++)
-	{
-		LocInfo.RestoreFactory_Temp(WI, WeaponFactoryClass, LocInfo.FactoryLocations[i]);
-	}
+	LocInfo.RestoreFactories(WeaponFactoryClass);
 }
 
 DefaultProperties

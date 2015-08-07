@@ -9,6 +9,9 @@ class XWeaponAddLocationInfo extends Object
 
 struct FactoryLocationInfo
 {
+	// not required. just for convenience
+	var name Name;
+	
 	var Vector Location;
 	var Rotator Rotation;
 	var float Scale;
@@ -16,7 +19,7 @@ struct FactoryLocationInfo
 };
 
 var config string MapName;
-var config array<Vector> FactoryLocations;
+var config array<FactoryLocationInfo> Factories;
 
 //**********************************************************************************
 // Static funtions
@@ -66,10 +69,18 @@ function StoreFactories(class<PickupFactory> FacClass)
 
 function StoreFactory(PickupFactory Factory)
 {
+	local int i;
 	if (Factory == none)
 		return;
 
-	FactoryLocations.AddItem(Factory.Location);
+	i = Factories.Length;
+	Factories.Add(1);
+
+	Factories[i].Name = Factory.Name;
+	Factories[i].Location = Factory.Location;
+	Factories[i].Rotation = Factory.Rotation;
+	Factories[i].Scale = Factory.DrawScale;
+	Factories[i].Scale3D = Factory.DrawScale3D;
 }
 
 function RestoreFactories(class<PickupFactory> FacClass)
@@ -78,17 +89,10 @@ function RestoreFactories(class<PickupFactory> FacClass)
 	local WorldInfo WorldInfo;
 	WorldInfo = class'Engine'.static.GetCurrentWorldInfo();
 
-	for (i=0; i<FactoryLocations.Length; i++)
+	for (i=0; i<Factories.Length; i++)
 	{
-		RestoreFactory_Temp(WorldInfo, FacClass, FactoryLocations[i]);
+		RestoreFactory(WorldInfo, FacClass, Factories[i]);
 	}
-}
-
-function bool RestoreFactory_Temp(WorldInfo WorldInfo, class<PickupFactory> FacClass, Vector InLocation)
-{
-	local FactoryLocationInfo FacInfo;
-	FacInfo.Location = InLocation;
-	return RestoreFactory(WorldInfo, FacClass, FacInfo);
 }
 
 function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass, FactoryLocationInfo FacInfo)
@@ -110,7 +114,7 @@ function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass,
 
 function int FactoryCount()
 {
-	return FactoryLocations.Length;
+	return Factories.Length;
 }
 
 //**********************************************************************************
@@ -124,8 +128,29 @@ private function Init(string InMapName)
 
 private function bool Validate()
 {
-	local Vector EmptyVector;
-	FactoryLocations.RemoveItem(EmptyVector);
+	local int i, j;
+
+	// removing invalid entries
+	for (i=Factories.Length-1; i>=0; i--)
+	{
+		if (IsZero(Factories[i].Location) && Factories[i].Name == '')
+		{
+			Factories.Remove(i, 1);
+		}
+	}
+
+	// removing double entries
+	for (i=Factories.Length-1; i>=0; i--)
+	{
+		for (j=0; j<i; j++)
+		{
+			if (Factories[j] == Factories[i])
+			{
+				Factories.Remove(i, 1);
+			}
+		}
+	}
+
 	return true;
 }
 

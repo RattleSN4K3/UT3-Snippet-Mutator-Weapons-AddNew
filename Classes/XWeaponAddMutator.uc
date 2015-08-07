@@ -19,14 +19,9 @@ function PostBeginPlay()
 function LoadWeapons()
 {
 	local XWeaponAddLocationInfo LocInfo;
-	local int i;
-
 	if (class'XWeaponAddLocationInfo'.static.Exists(LocInfo))
 	{
-		for (i=0; i<LocInfo.FactoryLocations.Length; i++)
-		{
-			LocInfo.RestoreFactory_Temp(WorldInfo, WeaponFactoryClass, LocInfo.FactoryLocations[i]);
-		}
+		LocInfo.RestoreFactories(WeaponFactoryClass);
 	}
 }
 
