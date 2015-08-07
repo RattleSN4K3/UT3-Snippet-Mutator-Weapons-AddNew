@@ -10,6 +10,9 @@ DefaultProperties
     bStatic=false
     bNoDelete=false
 
+	// allow basing on moveable actors (such as lifts)
+	bMovable=true
+
     WeaponPickupClass=class'UTWeap_ShockRifle'
 
 	// replicate initial rotation

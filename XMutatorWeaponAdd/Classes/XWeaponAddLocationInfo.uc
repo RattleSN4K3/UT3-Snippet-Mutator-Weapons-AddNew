@@ -16,6 +16,8 @@ struct FactoryLocationInfo
 	var Rotator Rotation;
 	var float Scale;
 	var Vector Scale3D;
+
+	var string Base;
 };
 
 var config string MapName;
@@ -96,6 +98,11 @@ function StoreFactory(PickupFactory Factory)
 	Factories[i].Rotation = Factory.Rotation;
 	Factories[i].Scale = Factory.DrawScale;
 	Factories[i].Scale3D = Factory.DrawScale3D;
+
+	if (Factory.Base != none)
+	{
+		Factories[i].Base = PathName(Factory.Base);
+	}
 }
 
 function RestoreFactories(class<PickupFactory> FacClass)
@@ -113,6 +120,7 @@ function RestoreFactories(class<PickupFactory> FacClass)
 function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass, FactoryLocationInfo FacInfo)
 {
 	local PickupFactory Fac;
+	local Object Obj;
 	if (WorldInfo != none && FacClass != none)
 	{
 		Fac = WorldInfo.Spawn(FacClass, none,, FacInfo.Location, FacInfo.Rotation);
@@ -120,6 +128,14 @@ function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass,
 		{
 			if (FacInfo.Scale != 0.0) Fac.SetDrawScale(FacInfo.Scale);
 			if (!IsZero(FacInfo.Scale3D)) Fac.SetDrawScale3D(FacInfo.Scale3D);
+
+			if (name(FacInfo.Base) != '')
+			{
+				Obj = FindObject(FacInfo.Base, class'Actor');
+				Fac.SetBase(Actor(Obj));
+				Fac.SetHardAttach(true);
+			}
+
 			return true;
 		}
 	}
