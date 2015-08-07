@@ -1,5 +1,11 @@
+/**
+ * A editor mutator to be placed into a map in the Editor. Won't work otherwise.
+ * By placing the actor into a map and run PIE, the custom weapon factories will
+ * be saved into a map profile of the currently running instance.
+ */
 class XWeaponAddEditorMutator extends XWeaponAddMutator
 	HideCategories(Mutator, Advanced, Attachment, Debug, Physics)
+	hidedropdown
 	placeable;
 
 var private bool bPreInitialized;
@@ -106,4 +112,5 @@ function string GetMapName()
 
 DefaultProperties
 {
+	bExportMenuData=false
 }
