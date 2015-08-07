@@ -14,11 +14,11 @@ var config array<Vector> FactoryLocations;
 // Static funtions
 //**********************************************************************************
 
-static function bool Create(out XWeaponAddLocationInfo OutInfo)
+static function bool Create(out XWeaponAddLocationInfo OutInfo, optional string InMapName = "")
 {
 	local string ObjectName;
 
-	ObjectName = GetMapName();
+	ObjectName = InMapName != "" ? InMapName : GetMapName();
 	OutInfo = NewClass(ObjectName);
 	if (OutInfo != none)
 	{
@@ -36,6 +36,23 @@ static function bool Exists(optional out XWeaponAddLocationInfo OutInfo)
 	TempMapName = GetMapName();
 	OutInfo = NewClass(TempMapName);
 	return OutInfo != none && OutInfo.MapName ~= TempMapName && OutInfo.Validate();
+}
+
+//**********************************************************************************
+// Public funtions
+//**********************************************************************************
+
+function StoreFactory(PickupFactory Factory)
+{
+	if (Factory == none)
+		return;
+
+	FactoryLocations.AddItem(Factory.Location);
+}
+
+function int FactoryCount()
+{
+	return FactoryLocations.Length;
 }
 
 //**********************************************************************************
