@@ -103,7 +103,7 @@ function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass,
 		Fac = WorldInfo.Spawn(FacClass, none,, FacInfo.Location, FacInfo.Rotation);
 		if (Fac != none)
 		{
-			if (FacInfo.Scale > 0) Fac.SetDrawScale(FacInfo.Scale);
+			if (FacInfo.Scale != 0.0) Fac.SetDrawScale(FacInfo.Scale);
 			if (!IsZero(FacInfo.Scale3D)) Fac.SetDrawScale3D(FacInfo.Scale3D);
 			return true;
 		}
