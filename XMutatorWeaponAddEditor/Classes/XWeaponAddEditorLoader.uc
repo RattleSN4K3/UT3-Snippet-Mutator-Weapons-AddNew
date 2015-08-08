@@ -1,6 +1,6 @@
 class XWeaponAddEditorLoader extends BrushBuilder;
 
-var() string CustomMapName;
+var() string ProfileName;
 
 event bool Build()
 {
@@ -13,7 +13,7 @@ function LoadWeapons()
 	local XWeaponAddLocationInfo LocInfo;
 	local class<PickupFactory> WeaponFactoryClass;
 
-	if (!class'XWeaponAddLocationInfo'.static.Exists(LocInfo, CustomMapName))
+	if (!class'XWeaponAddLocationInfo'.static.Exists(LocInfo, ProfileName))
 	{
 		BadParameters("No stored profile for this map.");
 		return;
