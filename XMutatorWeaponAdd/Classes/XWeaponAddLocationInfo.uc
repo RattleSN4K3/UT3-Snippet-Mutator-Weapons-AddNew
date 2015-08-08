@@ -122,10 +122,19 @@ function RestoreFactories(class<PickupFactory> FacClass)
 
 function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass, FactoryLocationInfo FacInfo)
 {
-	local PickupFactory Fac;
+	local Actor Fac;
 	local Object Obj;
 	if (WorldInfo != none && FacClass != none)
 	{
+		// prevent adding the same factory twice
+		foreach WorldInfo.AllActors(FacClass, Fac)
+		{
+			if (VSize(Fac.Location-FacInfo.Location) == 0.0)
+			{
+				return false;
+			}
+		}
+
 		Fac = WorldInfo.Spawn(FacClass, none,, FacInfo.Location, FacInfo.Rotation);
 		if (Fac != none)
 		{
