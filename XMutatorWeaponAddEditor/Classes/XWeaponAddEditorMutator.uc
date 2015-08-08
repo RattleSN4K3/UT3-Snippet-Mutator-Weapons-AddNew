@@ -79,10 +79,8 @@ function SaveWeapons()
 		return;
 	}
 
-	// clear old data
 	LocInfo.ClearConfig();
 	LocInfo.StoreFactories(WeaponFactoryClass);
-
 	LocInfo.SaveConfig();
 	WorldInfo.Game.Broadcast(none, "WeaponFactory data saved ("$LocInfo.FactoryCount()$" factories).");
 }

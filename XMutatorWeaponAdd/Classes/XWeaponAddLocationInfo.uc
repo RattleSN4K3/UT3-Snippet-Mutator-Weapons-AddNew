@@ -75,6 +75,9 @@ function StoreFactories(class<PickupFactory> FacClass)
 	local Actor Factory;
 	local WorldInfo WorldInfo;
 
+	// clear old data
+	Factories.Length = 0;
+
 	WorldInfo = class'Engine'.static.GetCurrentWorldInfo();
 	`Log(name$"::StoreFactories",,'XMutatorWeaponAdd');
 	foreach WorldInfo.DynamicActors(FacClass, Factory)
