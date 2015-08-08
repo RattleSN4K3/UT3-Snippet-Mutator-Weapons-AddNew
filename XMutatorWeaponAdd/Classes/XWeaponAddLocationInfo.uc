@@ -211,14 +211,14 @@ private static function Package GetPackage()
 private static function string GetMapName()
 {
 	local WorldInfo WorldInfo;
-	local string MapName;
+	local string TeampMapName;
 	WorldInfo = class'Engine'.static.GetCurrentWorldInfo();
 	if (WorldInfo != none)
 	{
-		MapName = WorldInfo.GetMapName(true);
+		TeampMapName = WorldInfo.GetMapName(true);
 	}
 
-	return MapName;
+	return TeampMapName;
 }
 
 DefaultProperties
