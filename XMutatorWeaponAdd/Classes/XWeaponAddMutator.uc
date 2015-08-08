@@ -3,23 +3,20 @@
  * for the new weapon factories
  */
 
-class XWeaponAddMutator extends UTMutator
-	config(XMutatorWeaponAdd);
+class XWeaponAddMutator extends UTMutator;
 
-var array<Vector> WeaponLocations;
 var class<PickupFactory> WeaponFactoryClass;
 
 function PostBeginPlay()
 {
     super.PostBeginPlay();
-
 	LoadWeapons();
 }
 
-function LoadWeapons()
+function LoadWeapons(optional string ProfileName = "")
 {
 	local XWeaponAddLocationInfo LocInfo;
-	if (class'XWeaponAddLocationInfo'.static.Exists(LocInfo))
+	if (class'XWeaponAddLocationInfo'.static.Exists(LocInfo, ProfileName))
 	{
 		LocInfo.RestoreFactories(WeaponFactoryClass);
 	}

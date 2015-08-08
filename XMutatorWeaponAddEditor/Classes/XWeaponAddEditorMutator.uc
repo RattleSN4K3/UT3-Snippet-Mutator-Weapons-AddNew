@@ -58,31 +58,48 @@ function MatchStarting()
 	SaveWeapons();
 }
 
+function Mutate(string MutateString, PlayerController Sender)
+{
+	local string command, profilename;
+	super.Mutate(MutateString, Sender);
+
+	if (Sender == none)
+		return;
+
+	command = "SaveWeapons"; // "SaveWeapons ProfileName"
+	if (Left(MutateString, Len(command)) ~= command)
+	{
+		profilename = Mid(MutateString, Len(command)+1); // "ProfileName"
+		SaveWeapons(profilename);
+		return;
+	}
+}
+
 //**********************************************************************************
 // Private funtions
 //**********************************************************************************
 
-// skip loading for editor mode for now
-function LoadWeapons();
+// skip loading for editor mode
+function LoadWeapons(optional string ProfileName = "");
 
-function SaveWeapons()
+function SaveWeapons(optional string ProfileName = "")
 {
 	local string MapName;
 	local XWeaponAddLocationInfo LocInfo;
 
-	MapName = GetMapName();
+	MapName = ProfileName != "" ? ProfileName : GetMapName();
 	`Log(name$"::PostBeginPlay - Map:"@MapName,,'XMutatorWeaponAdd');
 
 	if (!class'XWeaponAddLocationInfo'.static.Create(LocInfo, MapName))
 	{
-		WorldInfo.Game.Broadcast(none, "Unable to create WeaponFactory profile.");
+		WorldInfo.Game.Broadcast(none, "Unable to create map profile.");
 		return;
 	}
 
 	LocInfo.ClearConfig();
 	LocInfo.StoreFactories(WeaponFactoryClass);
 	LocInfo.SaveConfig();
-	WorldInfo.Game.Broadcast(none, "WeaponFactory data saved ("$LocInfo.FactoryCount()$" factories).");
+	WorldInfo.Game.Broadcast(none, "Map profile data saved ("$LocInfo.FactoryCount()$" factories).");
 }
 
 function string GetMapName()
