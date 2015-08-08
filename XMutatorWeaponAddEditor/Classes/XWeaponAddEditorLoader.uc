@@ -28,6 +28,5 @@ DefaultProperties
 	// not button icon for now
     //BitmapFilename="UnrealExTunnel" // Binaries\EditorRes\Cancel.png
 
-	GroupName=Example
     ToolTip="XMutatorWeaponAdd Loader"
 }
