@@ -1,0 +1,8 @@
+Begin Map
+   Begin Level
+      Begin Actor Class=XWeaponAddEditorMutator Archetype=XWeaponAddEditorMutator'XMutatorWeaponAdd.Default__XWeaponAddEditorMutator'
+      End Actor
+   End Level
+Begin Surface
+End Surface
+End Map
