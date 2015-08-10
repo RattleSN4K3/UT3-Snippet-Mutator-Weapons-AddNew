@@ -2,7 +2,7 @@ XMutatorWeaponAdd
 -----------------
 Adding weapons to maps by config profile
 
-Test mutator for adding a specified weapon pickup factory with its specific weapon to maps of which profile is stored in the config file. This basic code can be used to create  a mutator which adds a weapon to any map you create a profile for. Such profile can be created wit the editor itself by opening the maps and placing the custom factory to your maps. Within the editor, you are able to load and save the setup for the opened map.
+Test mutator for adding a specified weapon pickup factory with its specific weapon to maps whose profile is stored in the config file. This basic code can be used to create a mutator which adds a weapon to any map you create a profile for. Such profile can be created with the editor itself by opening the maps and placing the custom factory to your maps. Within the editor, you are able to load and save the setup for the opened map.
 
 # Compiling
 
@@ -14,7 +14,6 @@ For referencing purpose, `%basedir%` would be the local profile folder `%userpro
 
 - Download the [latest source files](/../../archive/master.zip)
 - Extract the zipped source files
-- Create a folder named `XMutatorWeaponAdd` into the source folder `%basedir%\Src`
 - Copy/symlink the **`XMutatorWeaponAdd`** folder of the source files into `%basedir%\Src`
 - Copy/symlink the **`XMutatorWeaponAddEditor`** folder of the source files into `%basedir%\Src`
 - Copy/symlink `XMutatorWeaponAdd\Config\UTXMutatorWeaponAdd.ini` to `%basedir%\Src\Config`
@@ -47,9 +46,9 @@ Without copying/moving the file, the game must be started with the *UseUnpublish
 ut3 -useunpublished
 ```
 
-# Create map profile
+# Creating map profile
 
-You can create the map profile in two ways. Each would required some setup. They usage is different in both ways. One would be integrated into the editor UI and the other methods needs to load the map in the Play-In-Editor session (PIE).
+You can create a map profile in two ways. Each would require some setup. The usage is different in both ways. One would be integrated into the editor UI and the other method needs to load the mutator in the Play-In-Editor session (PIE).
 
 ## Play-In-Editor
 
@@ -65,7 +64,7 @@ You can create the map profile in two ways. Each would required some setup. They
 - Start the level in PIE mode (_Build_>_Play Level_ or rightclick `Play From Here`)
 - A map profile is automatically saved
 
-You can also use the console command `mutate SaveWeapons` in the PIE session to save the map profile. You can also append a map name to the command to save the map profile data to a different map profile with a custom name.
+You can also use the console command `mutate SaveWeapons` in the PIE session to save the map profile. This requires to have the mutator activated (placed in the level). You can append a map name to the command to save the map profile data to a different map profile with a custom name.
 
 ```
 mutate SaveWeapons CustomProfileName
@@ -73,7 +72,7 @@ mutate SaveWeapons CustomProfileName
 
 ## UI
 
-If you compiled the source code, you can skip this step of adding the package to the _startup packages_. Otherwise:
+If you compiled the source code, you can skip this step of adding the package to the _startup packages_ as you already have it specified as _ModPackage_. Otherwise:
 - Open the Config\UTEditor.ini
 - Search for the section `[Engine.StartupPackages]`
 - Add **`Package=XMutatorWeaponAddEditor`** after the section header
@@ -86,7 +85,7 @@ This step is required to load the package at the startup of the editor which res
 - Use the **_XMutatorWeaponAdd Saver_** button at the left toolbar to save locations into a map profile of the current opened map
 - If you need to edit the locations, you can use the **_XMutatorWeaponAdd Loader_** button to load the locations from the map profile of the current map
 
-As a note, you can use the advanced menu for each button (rightclick on the button) where you are able to save the profile under the given name. Keep in mind, the mutator in the game only loads the map profile with the exact given.
+As a note, you can use the advanced menu for each button (rightclick on the button) where you are able to save the profile under a different name. Keep in mind, the mutator in the game only loads the map profile with the exact given.
 
 A map profile is stored in the config file `UTXMutatorWeaponAdd.ini`. Such profile would look like this:
 ```
