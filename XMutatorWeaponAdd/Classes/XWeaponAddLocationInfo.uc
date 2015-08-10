@@ -20,13 +20,23 @@ struct FactoryLocationInfo
 	var string Base;
 };
 
+// Config properties stored in the config file (not the one specified in the class specifier)
+
+/** MapName this profile was created for. This field is used to check for a created class */
 var config string MapName;
+/** Array of all factory to be placed in a level */
 var config array<FactoryLocationInfo> Factories;
 
 //**********************************************************************************
 // Static funtions
 //**********************************************************************************
 
+/**
+ * Static public method to create a profile for a given map name
+ * @param OutInfo (Out) the created profile. Can be empty
+ * @param InMapName an optional string for a custom overridden map name. If not present the current map will be used
+ * @return true if a profile was successfully created and OutInfo is a valid object
+ */
 static function bool Create(out XWeaponAddLocationInfo OutInfo, optional string InMapName = "")
 {
 	local string ObjectName;
@@ -46,10 +56,11 @@ static function bool Create(out XWeaponAddLocationInfo OutInfo, optional string 
 		ObjectName = InMapName;
 	}
 
-	LogInternal("Mapname:"@ObjectName);
+	// creating class with the current map name
 	OutInfo = NewClass(ObjectName);
 	if (OutInfo != none)
 	{
+		// init basic props
 		OutInfo.Init(ObjectName);
 		return true;
 	}
@@ -57,6 +68,7 @@ static function bool Create(out XWeaponAddLocationInfo OutInfo, optional string 
 	return false;
 }
 
+/** Check if a profile exists */
 static function bool Exists(optional out XWeaponAddLocationInfo OutInfo, optional string InMapName = "")
 {
 	local string TempMapName;
@@ -93,15 +105,18 @@ function StoreFactory(PickupFactory Factory)
 	if (Factory == none)
 		return;
 
+	// store current count, increase array size
 	i = Factories.Length;
 	Factories.Add(1);
 
+	// store props in the last item of the array (which we created before)
 	Factories[i].Name = Factory.Name;
 	Factories[i].Location = Factory.Location;
 	Factories[i].Rotation = Factory.Rotation;
 	Factories[i].Scale = Factory.DrawScale;
 	Factories[i].Scale3D = Factory.DrawScale3D;
 
+	// if base is set, store the fully qualified path (cannot store references in config)
 	if (Factory.Base != none)
 	{
 		Factories[i].Base = PathName(Factory.Base);
@@ -114,6 +129,7 @@ function RestoreFactories(class<PickupFactory> FacClass)
 	local WorldInfo WorldInfo;
 	WorldInfo = class'Engine'.static.GetCurrentWorldInfo();
 
+	// restore each stored weapon factory info
 	for (i=0; i<Factories.Length; i++)
 	{
 		RestoreFactory(WorldInfo, FacClass, Factories[i]);
@@ -138,12 +154,17 @@ function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass,
 		Fac = WorldInfo.Spawn(FacClass, none,, FacInfo.Location, FacInfo.Rotation);
 		if (Fac != none)
 		{
+			// only apply scale if stored values are valid
 			if (FacInfo.Scale != 0.0) Fac.SetDrawScale(FacInfo.Scale);
 			if (!IsZero(FacInfo.Scale3D)) Fac.SetDrawScale3D(FacInfo.Scale3D);
 
+			// if base was stored...
 			if (name(FacInfo.Base) != '')
 			{
+				// ... try to find the actor/object in the current level by its fully qualified name
 				Obj = FindObject(FacInfo.Base, class'Actor');
+
+				// just apply the base and hard attach the factory to the ground (support for moving platforms etc.)
 				Fac.SetBase(Actor(Obj));
 				Fac.SetHardAttach(true);
 			}
@@ -183,12 +204,15 @@ private function bool Validate()
 	}
 
 	// removing double entries
+	// comparing each item with every other item in the array...
 	for (i=Factories.Length-1; i>=0; i--)
 	{
+		// ... starting with the end and check every item before this one
 		for (j=0; j<i; j++)
 		{
 			if (Factories[j] == Factories[i])
 			{
+				// remove duplicate
 				Factories.Remove(i, 1);
 			}
 		}
@@ -201,13 +225,26 @@ private function bool Validate()
 // Private static funtions
 //**********************************************************************************
 
+/**
+ * Creating a new class with the given name. Typically this would be the original
+ * map name which then can be loaded for each specific map.
+ * @param InMapName the name to create a class/config section for
+ */
 private static function XWeaponAddLocationInfo NewClass(string InMapName)
 {
 	local XWeaponAddLocationInfo Obj;
+
+	// creating this class with the outer as the current package.
+	// this will force the config file being creating in a config file
+	// with the same name as the package (typcailly UTPackageName.ini)
 	Obj = new(GetPackage(), InMapName) default.Class;
 	return Obj;
 }
 
+/**
+ * Retrieves the current package where this script file is located in.
+ * @return a package object
+ */
 private static function Package GetPackage()
 {
 	local Object TempObj;
@@ -217,6 +254,10 @@ private static function Package GetPackage()
 	return Package(TempObj);
 }
 
+/**
+ * Get the current running map name (including the prefix)
+ * @return returns an emptry string if a WorldInfo cannot be found
+ */
 private static function string GetMapName()
 {
 	local WorldInfo WorldInfo;

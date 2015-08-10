@@ -9,6 +9,8 @@ var class<PickupFactory> WeaponFactoryClass;
 
 function PostBeginPlay()
 {
+	// once this mutator gets loaded, it will initialize loading the weapons
+
     super.PostBeginPlay();
 	LoadWeapons();
 }
@@ -16,8 +18,10 @@ function PostBeginPlay()
 function LoadWeapons(optional string ProfileName = "")
 {
 	local XWeaponAddLocationInfo LocInfo;
+	// "Exists" automatically checks for a valid profile and returns that one in LocInfo
 	if (class'XWeaponAddLocationInfo'.static.Exists(LocInfo, ProfileName))
 	{
+		// ... we enforce to restores factories with our custom factory
 		LocInfo.RestoreFactories(WeaponFactoryClass);
 	}
 }
