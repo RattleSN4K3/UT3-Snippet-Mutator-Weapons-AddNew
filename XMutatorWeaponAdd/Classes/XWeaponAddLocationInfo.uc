@@ -12,6 +12,8 @@ struct FactoryLocationInfo
 	// not required. just for convenience
 	var name Name;
 	
+	var class<Inventory> InventoryClass;
+
 	var Vector Location;
 	var Rotator Rotation;
 	var float Scale;
@@ -116,6 +118,9 @@ function StoreFactory(PickupFactory Factory)
 	Factories[i].Scale = Factory.DrawScale;
 	Factories[i].Scale3D = Factory.DrawScale3D;
 
+	// store the inventory type. use weaponclass if a weapon pickup factory
+	Factories[i].InventoryClass = UTWeaponPickupFactory(Factory) != none ? UTWeaponPickupFactory(Factory).WeaponPickupClass : Factory.InventoryType;
+
 	// if base is set, store the fully qualified path (cannot store references in config)
 	if (Factory.Base != none)
 	{
@@ -138,16 +143,17 @@ function RestoreFactories(class<PickupFactory> FacClass)
 
 function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass, FactoryLocationInfo FacInfo)
 {
-	local Actor Fac;
+	local Actor Other;
+	local PickupFactory Fac;
 	local Object Obj;
 	if (WorldInfo != none && FacClass != none)
 	{
 		// prevent adding the same factory twice
-		foreach WorldInfo.AllActors(FacClass, Fac)
+		foreach WorldInfo.AllActors(FacClass, Other)
 		{
-			if (Fac.Class == FacClass)
+			if (Other.Class == FacClass)
 			{
-				if (VSize(Fac.Location-FacInfo.Location) == 0.0)
+				if (VSize(Other.Location-FacInfo.Location) == 0.0)
 				{
 					return false;
 				}
@@ -160,6 +166,20 @@ function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass,
 			// only apply scale if stored values are valid
 			if (FacInfo.Scale != 0.0) Fac.SetDrawScale(FacInfo.Scale);
 			if (!IsZero(FacInfo.Scale3D)) Fac.SetDrawScale3D(FacInfo.Scale3D);
+
+			// apply custom weapon class if present
+			if (FacInfo.InventoryClass != none)
+			{
+				if (UTWeaponPickupFactory(Fac) != none && class<UTWeapon>(FacInfo.InventoryClass) != none)
+				{
+					UTWeaponPickupFactory(Fac).WeaponPickupClass = class<UTWeapon>(FacInfo.InventoryClass);
+				}
+				else
+				{
+					Fac.InventoryType = FacInfo.InventoryClass;
+				}
+				Fac.InitializePickup(); 
+			}
 
 			// if base was stored...
 			if (name(FacInfo.Base) != '')
