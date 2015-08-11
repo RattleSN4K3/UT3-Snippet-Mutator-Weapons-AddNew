@@ -84,7 +84,7 @@ static function bool Exists(optional out XWeaponAddLocationInfo OutInfo, optiona
 // Public funtions
 //**********************************************************************************
 
-function StoreFactories(class<PickupFactory> FacClass)
+function StoreFactories(class<PickupFactory> FacClass, optional bool bUpdate = false)
 {
 	local Actor Factory;
 	local WorldInfo WorldInfo;
@@ -98,6 +98,12 @@ function StoreFactories(class<PickupFactory> FacClass)
 	{
 		`Log(name$"::StoreFactories - Storing factory"@Factory,,'XMutatorWeaponAdd');
 		StoreFactory(PickupFactory(Factory));
+
+		// update pickup mesh
+		if (bUpdate)
+		{
+			PickupFactory(Factory).InitializePickup();
+		}
 	}
 }
 

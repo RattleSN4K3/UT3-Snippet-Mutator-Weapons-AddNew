@@ -28,7 +28,7 @@ function SaveWeapons()
 
 	// clear old data, store new data and save it
 	LocInfo.ClearConfig();
-	LocInfo.StoreFactories(WeaponFactoryClass);
+	LocInfo.StoreFactories(WeaponFactoryClass, true);
 	LocInfo.SaveConfig();
 }
 
