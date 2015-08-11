@@ -145,9 +145,12 @@ function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass,
 		// prevent adding the same factory twice
 		foreach WorldInfo.AllActors(FacClass, Fac)
 		{
-			if (VSize(Fac.Location-FacInfo.Location) == 0.0)
+			if (Fac.Class == FacClass)
 			{
-				return false;
+				if (VSize(Fac.Location-FacInfo.Location) == 0.0)
+				{
+					return false;
+				}
 			}
 		}
 
