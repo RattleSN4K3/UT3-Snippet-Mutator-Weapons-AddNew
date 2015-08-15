@@ -14,7 +14,6 @@ event bool Build()
 function LoadWeapons()
 {
 	local XWeaponAddLocationInfo LocInfo;
-	local class<PickupFactory> WeaponFactoryClass;
 
 	// ensure a profile exists
 	if (!class'XWeaponAddLocationInfo'.static.Exists(LocInfo, ProfileName))
@@ -23,11 +22,8 @@ function LoadWeapons()
 		return;
 	}
 
-	// retrieve the specific factory class from the mutator properties
-	WeaponFactoryClass = class'XWeaponAddMutator'.default.WeaponFactoryClass;
-
-	// restroes and automatically create these in the editor instance
-	LocInfo.RestoreFactories(WeaponFactoryClass);
+	// restores and automatically create factories in the editor instance
+	LocInfo.RestoreFactories();
 }
 
 DefaultProperties

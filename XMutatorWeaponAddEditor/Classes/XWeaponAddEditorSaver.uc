@@ -14,7 +14,6 @@ event bool Build()
 function SaveWeapons()
 {
 	local XWeaponAddLocationInfo LocInfo;
-	local class<PickupFactory> WeaponFactoryClass;
 
 	// don't save any data for invalid maps (when no map is loaded for instance)
 	if (!class'XWeaponAddLocationInfo'.static.Create(LocInfo, ProfileName))
@@ -23,12 +22,9 @@ function SaveWeapons()
 		return;
 	}
 
-	// retrieve the specific factory class from the mutator properties
-	WeaponFactoryClass = class'XWeaponAddMutator'.default.WeaponFactoryClass;
-
 	// clear old data, store new data and save it
 	LocInfo.ClearConfig();
-	LocInfo.StoreFactories(WeaponFactoryClass);
+	LocInfo.StoreFactories();
 	LocInfo.SaveConfig();
 }
 

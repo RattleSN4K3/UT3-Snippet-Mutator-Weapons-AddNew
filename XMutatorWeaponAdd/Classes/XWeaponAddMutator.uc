@@ -5,8 +5,6 @@
 
 class XWeaponAddMutator extends UTMutator;
 
-var class<PickupFactory> WeaponFactoryClass;
-
 function PostBeginPlay()
 {
 	// once this mutator gets loaded, it will initialize loading the weapons
@@ -22,11 +20,10 @@ function LoadWeapons(optional string ProfileName = "")
 	if (class'XWeaponAddLocationInfo'.static.Exists(LocInfo, ProfileName))
 	{
 		// ... we enforce to restores factories with our custom factory
-		LocInfo.RestoreFactories(WeaponFactoryClass);
+		LocInfo.RestoreFactories();
 	}
 }
 
 Defaultproperties
 {
-	WeaponFactoryClass=class'XWeaponAddFactory'
 }

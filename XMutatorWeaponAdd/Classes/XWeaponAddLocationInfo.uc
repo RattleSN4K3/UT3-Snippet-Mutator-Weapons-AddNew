@@ -9,6 +9,8 @@ class XWeaponAddLocationInfo extends Object
 
 struct FactoryLocationInfo
 {
+	var class<PickupFactory> FactoryClass;
+
 	// not required. just for convenience
 	var name Name;
 	
@@ -26,6 +28,8 @@ struct FactoryLocationInfo
 var config string MapName;
 /** Array of all factory to be placed in a level */
 var config array<FactoryLocationInfo> Factories;
+
+var class<PickupFactory> WeaponFactoryClass;
 
 //**********************************************************************************
 // Static funtions
@@ -82,7 +86,7 @@ static function bool Exists(optional out XWeaponAddLocationInfo OutInfo, optiona
 // Public funtions
 //**********************************************************************************
 
-function StoreFactories(class<PickupFactory> FacClass)
+function StoreFactories()
 {
 	local Actor Factory;
 	local WorldInfo WorldInfo;
@@ -92,7 +96,7 @@ function StoreFactories(class<PickupFactory> FacClass)
 
 	WorldInfo = class'Engine'.static.GetCurrentWorldInfo();
 	`Log(name$"::StoreFactories",,'XMutatorWeaponAdd');
-	foreach WorldInfo.DynamicActors(FacClass, Factory)
+	foreach WorldInfo.DynamicActors(WeaponFactoryClass, Factory)
 	{
 		`Log(name$"::StoreFactories - Storing factory"@Factory,,'XMutatorWeaponAdd');
 		StoreFactory(PickupFactory(Factory));
@@ -109,6 +113,9 @@ function StoreFactory(PickupFactory Factory)
 	i = Factories.Length;
 	Factories.Add(1);
 
+	// store the factory class (allowing subclasses)
+	Factories[i].FactoryClass = Factory.Class;
+
 	// store props in the last item of the array (which we created before)
 	Factories[i].Name = Factory.Name;
 	Factories[i].Location = Factory.Location;
@@ -123,7 +130,7 @@ function StoreFactory(PickupFactory Factory)
 	}
 }
 
-function RestoreFactories(class<PickupFactory> FacClass)
+function RestoreFactories()
 {
 	local int i;
 	local WorldInfo WorldInfo;
@@ -132,14 +139,17 @@ function RestoreFactories(class<PickupFactory> FacClass)
 	// restore each stored weapon factory info
 	for (i=0; i<Factories.Length; i++)
 	{
-		RestoreFactory(WorldInfo, FacClass, Factories[i]);
+		RestoreFactory(WorldInfo, Factories[i]);
 	}
 }
 
-function bool RestoreFactory(WorldInfo WorldInfo, class<PickupFactory> FacClass, FactoryLocationInfo FacInfo)
+function bool RestoreFactory(WorldInfo WorldInfo, FactoryLocationInfo FacInfo)
 {
+	local class<PickupFactory> FacClass;
 	local Actor Fac;
 	local Object Obj;
+	
+	FacClass = FacInfo.FactoryClass != none ? FacInfo.FactoryClass : WeaponFactoryClass;
 	if (WorldInfo != none && FacClass != none)
 	{
 		// prevent adding the same factory twice
@@ -276,4 +286,5 @@ private static function string GetMapName()
 
 DefaultProperties
 {
+	WeaponFactoryClass=class'XWeaponAddFactory'
 }

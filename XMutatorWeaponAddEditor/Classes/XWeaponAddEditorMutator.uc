@@ -97,7 +97,7 @@ function SaveWeapons(optional string ProfileName = "")
 	}
 
 	LocInfo.ClearConfig();
-	LocInfo.StoreFactories(WeaponFactoryClass);
+	LocInfo.StoreFactories();
 	LocInfo.SaveConfig();
 	WorldInfo.Game.Broadcast(none, "Map profile data saved ("$LocInfo.FactoryCount()$" factories).");
 }
