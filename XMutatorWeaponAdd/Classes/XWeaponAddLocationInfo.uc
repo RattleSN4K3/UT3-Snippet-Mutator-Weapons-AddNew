@@ -149,7 +149,7 @@ function bool RestoreFactory(WorldInfo WorldInfo, FactoryLocationInfo FacInfo)
 	local Actor Fac;
 	local Object Obj;
 	
-	FacClass = FacInfo.FactoryClass != none ? FacInfo.FactoryClass : WeaponFactoryClass;
+	FacClass = FacInfo.FactoryClass;
 	if (WorldInfo != none && FacClass != none)
 	{
 		// prevent adding the same factory twice
@@ -210,7 +210,11 @@ private function bool Validate()
 	// removing invalid entries
 	for (i=Factories.Length-1; i>=0; i--)
 	{
-		if (IsZero(Factories[i].Location) && Factories[i].Name == '')
+		if (Factories[i].FactoryClass == none)
+		{
+			Factories.Remove(i, 1);
+		}
+		else if (IsZero(Factories[i].Location) && Factories[i].Name == '')
 		{
 			Factories.Remove(i, 1);
 		}
